@@ -14,9 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
-
-        return response()->json($tasks);
+        // $tasks = Task::all();
+        // return response()->json($tasks);
+        // laravel renvoie directement la réponse en Json
+        return Task::all();
     }
 
     /**
@@ -48,9 +49,7 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        $task = Task::findOrFail($id);
-
-        return response()->json($task);
+        return Task::find($id);
     }
 
     /**
