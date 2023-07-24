@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -33,3 +34,9 @@ Route::get('/tags/{id}', [TagController::class, 'show']); */
 Route::apiResource('tasks', TaskController::class);//->only('index', 'show') pour seulement 2 routes
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('tags', TagController::class);
+
+/* Route::apiResources([
+    'task'=> TaskController::class,
+    'category'=> CategoryController::class,
+    'tag'=> TagController::class
+]);  */

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
@@ -38,11 +39,17 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $title = $request->input('title');
+        $validated = $request->validate([
+            'title' => 'required|string|min:3|max:255'
+        ]);
 
+
+        /* $title = $request->input('title'); */
         // On crée une nouvelle instance, puis on lui définit la propriété title
-        $task = new Task();
-        $task->title = $title;
+        /* $task = new Task();
+        $task->title = $title; */
+
+        $task = Task::create($validated);
 
         // On sauvegarde, puis on gère la réponse avec le code HTTP qui convient
         // 201 : Created
@@ -86,22 +93,32 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         // On recherche avec l'id
-        $task= Task::find($id);
+        $task= Task::findOrFail($id);
         // Si on n'a rien, on ne peut pas faire de mise à jour
         // 404 : not found
         if (!$task) {
             return response(null, 404);
         }
 
-        // Extraction des valeurs passées de la body de la requête
+        $validated = $request->validate([
+            'title' => 'required|string|min:3|max:255'
+        ]);
+
+        $task->update($validated);
+
+        /* // Extraction des valeurs passées de la body de la requête
         $title = $request->input('title');
 
-        $task->title = $title;
+        $task->title = $title; */
 
         // On sauvegarde, puis on gère la réponse avec le code HTTP qui convient
         // 500 : Internal Server Error
         if ($task->save()) {
-            return response()->json($task);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Task updated!',
+                'task' => $task
+            ]);
         } else {
             return response(null, 500);
         }
@@ -116,7 +133,7 @@ class TaskController extends Controller
     public function destroy($id)
     {
          // On recherche avec l'id
-         $task= Task::find($id);
+         $task= Task::findOrFail($id);
          // Si on n'a rien, on ne peut pas faire de mise à jour
          // 404 : not found
          if (!$task) {
@@ -126,7 +143,10 @@ class TaskController extends Controller
          // On supprime puis on gère la réponse avec le code HTTP qui convient
          // 500 : Internal Server Error
          if ($task->delete()) {
-             return response(null, 200);
+             return response()->json([
+                'status' => 'success',
+                'message' => 'Task deleted!'
+            ]);
          } else {
              return response(null, 500);
          }
