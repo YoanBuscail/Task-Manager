@@ -1,7 +1,6 @@
 const getTasks = async function(){
     const request = await fetch('http://localhost:8000/api/tasks');
     const tasks = await request.json();
-
     return tasks;
 }
 
@@ -18,6 +17,7 @@ const createTaskElement = (task) => {
     const deleteBtnElement = document.createElement('div');
     deleteBtnElement.classList.add('delete');
     newTaskElement.append(deleteBtnElement);
+    deleteBtnElement.addEventListener('click', () => domRemoveTask(task.id, taskList));
 
     const editBtnElement = document.createElement('div');
     editBtnElement.classList.add('edit');
@@ -25,6 +25,25 @@ const createTaskElement = (task) => {
 
     taskList.append(newTaskElement);
 };
+
+const domRemoveTask = function(taskIdToDelete, taskList){
+    const requestOptions = {
+        method: 'DELETE',
+        headers: {
+        'Content-Type': 'application/json'
+        }
+    };
+
+    fetch(`http://127.0.0.1:8000/api/tasks/${taskIdToDelete}`, requestOptions)
+    .then(response => {    
+    // Supprimer la tâche de la liste
+    const taskElementToDelete = document.querySelector(`[data-id="${taskIdToDelete}"]`);
+    if (taskElementToDelete) {
+        taskList.removeChild(taskElementToDelete);
+    }
+    return response.json();
+    }
+)};
 
 /*const createTaskElement = (task) => {
     const taskList = document.querySelector('.tasklist');
@@ -52,27 +71,3 @@ window.addEventListener('DOMContentLoaded', function(){
     });
 });
 
-/* const taskIdToDelete = '3';
-const taskListElement = document.querySelector('.tasklist');
-const requestOptions = {
-    method: 'DELETE',
-    headers: {
-    'Content-Type': 'application/json'
-    }
-};
-
-fetch(`http://127.0.0.1:8000/api/tasks/${taskIdToDelete}`, requestOptions)
-    .then(response => {
-    if (!response.ok) {
-        console.log("La suppression de la tâche a échoué.");
-    }
-    console.log('La tâche a été supprimée avec succès.');
-    
-    // Supprimer la tâche de la liste côté client
-    const taskElementToDelete = document.querySelector(`[data-id="${taskIdToDelete}"]`);
-    if (taskElementToDelete) {
-      taskListElement.removeChild(taskElementToDelete);
-    }
-
-    }) */
-    

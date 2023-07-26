@@ -18,7 +18,7 @@ class TaskController extends Controller
         // $tasks = Task::all();
         // return response()->json($tasks);
         // laravel renvoie directement la réponse en Json
-        return Task::all();
+        return Task::all()->load(['category', 'tags']);
     }
 
     /**
