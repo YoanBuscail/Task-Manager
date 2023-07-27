@@ -1,7 +1,20 @@
 const getTasks = async function(){
     const request = await fetch('http://localhost:8000/api/tasks');
     const tasks = await request.json();
+
     return tasks;
+}
+
+const deleteTask = async function(id){
+    // faire la requête DELETE vers notre API
+    await fetch('http://localhost:8000/api/tasks/' + id, {
+        "method": "DELETE"
+    });
+};
+
+const deleteTaskElement = function(taskElement){
+    // supprimer l'élément du DOM
+    taskElement.remove();
 }
 
 const createTaskElement = (task) => {
@@ -15,9 +28,18 @@ const createTaskElement = (task) => {
     newTaskElement.append(textElement);
     
     const deleteBtnElement = document.createElement('div');
+    deleteBtnElement.addEventListener('click', function(){
+        if(confirm('Zetes sur de supprimer la tâche ?')){
+            deleteTask(task.id).then(() => {
+                deleteTaskElement(newTaskElement);
+            }).catch(() => {
+                alert('La requête de suppression a echoué !');
+            });
+        }
+    });
+
     deleteBtnElement.classList.add('delete');
     newTaskElement.append(deleteBtnElement);
-    deleteBtnElement.addEventListener('click', () => domRemoveTask(task.id, taskList));
 
     const editBtnElement = document.createElement('div');
     editBtnElement.classList.add('edit');
@@ -25,25 +47,6 @@ const createTaskElement = (task) => {
 
     taskList.append(newTaskElement);
 };
-
-const domRemoveTask = function(taskIdToDelete, taskList){
-    const requestOptions = {
-        method: 'DELETE',
-        headers: {
-        'Content-Type': 'application/json'
-        }
-    };
-
-    fetch(`http://127.0.0.1:8000/api/tasks/${taskIdToDelete}`, requestOptions)
-    .then(response => {    
-    // Supprimer la tâche de la liste
-    const taskElementToDelete = document.querySelector(`[data-id="${taskIdToDelete}"]`);
-    if (taskElementToDelete) {
-        taskList.removeChild(taskElementToDelete);
-    }
-    return response.json();
-    }
-)};
 
 /*const createTaskElement = (task) => {
     const taskList = document.querySelector('.tasklist');
@@ -70,4 +73,3 @@ window.addEventListener('DOMContentLoaded', function(){
         console.log('Erreur de requête');
     });
 });
-

@@ -69,7 +69,7 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        return Task::find($id);
+        return Task::findOrFail($id)->load(['category', 'tags']);;
     }
 
     /**
