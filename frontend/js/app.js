@@ -5,6 +5,13 @@ const getTasks = async function(){
     return tasks;
 }
 
+const getCategories = async function(){
+    const request = await fetch('http://localhost:8000/api/categories');
+    const categories = await request.json();
+  
+    return categories;
+};
+
 const deleteTask = async function(id){
     // faire la requête DELETE vers notre API
     await fetch('http://localhost:8000/api/tasks/' + id, {
@@ -17,6 +24,16 @@ const deleteTaskElement = function(taskElement){
     taskElement.remove();
 }
 
+const showModal = function () {
+    const modalDialog = document.querySelector('.modal-dialog');
+    modalDialog.classList.add('show');
+};
+
+const hideModal = function () {
+const modalDialog = document.querySelector('.modal-dialog');
+modalDialog.classList.remove('show');
+};
+
 const createTaskElement = (task) => {
     const taskList = document.querySelector('.tasklist');
 
@@ -26,6 +43,10 @@ const createTaskElement = (task) => {
     const textElement = document.createElement('p');
     textElement.textContent = task.title;
     newTaskElement.append(textElement);
+
+    const categoryElement = document.createElement('em');
+    categoryElement.textContent = task.category.name;
+    newTaskElement.append(categoryElement);;
     
     const deleteBtnElement = document.createElement('div');
     deleteBtnElement.addEventListener('click', function(){
@@ -48,6 +69,44 @@ const createTaskElement = (task) => {
     taskList.append(newTaskElement);
 };
 
+// Ajouter un écouteur d'événements click sur le bouton
+const newTaskButton = document.querySelector('.create-task-container button')
+newTaskButton.addEventListener('click', showModal);
+
+// Ajouter un écouteur d'événements submit sur le formulaire
+const taskForm = document.querySelector('.modal-dialog form');
+taskForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+  const taskTitle = document.getElementById('task-title').value;
+  const taskCategory = document.getElementById('task-category').value;
+  addNewTask(taskTitle, taskCategory);
+});
+
+const addNewTask = async function(title, category){
+    // Envoyer une requête POST à l'API pour ajouter une nouvelle tâche
+    return fetch('http://localhost:8000/api/tasks', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        title: title,
+        category: category
+    })
+})
+.then((response) => {
+    return response.json();
+})
+.then((newTask) => {
+    createTaskElement(newTask); // Afficher la nouvelle tâche dans le DOM
+    hideModal(); // Masquer la modale après avoir ajouté la tâche
+  })
+  .catch((error) => {
+    alert('Échec de l\'ajout de la nouvelle tâche. Veuillez réessayer.');
+  });
+}
+
+
 /*const createTaskElement = (task) => {
     const taskList = document.querySelector('.tasklist');
 
@@ -64,7 +123,8 @@ const createTaskElement = (task) => {
     taskList.append(newTaskElement);
 };*/
 
-window.addEventListener('DOMContentLoaded', function(){
+// Fonction pour le chargement initial des tâches
+const loadTasks = function(){
     getTasks().then((tasks) => {
         tasks.forEach((task) => {
             createTaskElement(task);
@@ -72,4 +132,7 @@ window.addEventListener('DOMContentLoaded', function(){
     }).catch(() => {
         console.log('Erreur de requête');
     });
-});
+};
+
+// Chargement initial des tâches
+window.addEventListener('DOMContentLoaded', loadTasks);
