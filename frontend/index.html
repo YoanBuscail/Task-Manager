@@ -16,7 +16,7 @@
   <main>
 
     <div class="create-task-container">
-      <button>nouvelle tâche</button>
+      <button id="create-task-btn">nouvelle tâche</button>
     </div>
 
     <div class="message success" hidden>
@@ -29,16 +29,28 @@
     <ul class="tasklist"></ul>
 
     <div class="modal-dialog">
-      <form>
-        <h2>nouvelle tâche</h2>
+      <form id="task-create-form">
+        <h2>nouvelle tâche<span class="close-modal-btn">&times;</span></h2>
         <label for="task-title" class="screen-reader-only">titre de la tâche</label>
         <input name= "id" id="task-id" type="hidden">
         <input name= "title" id="task-title" placeholder="titre de la tâche..." type="text" required>
         
         <!-- Nouveau champ pour saisir la catégorie -->
-        <label for="task-category" class="screen-reader-only">Catégorie de la tâche</label>
-        <input name="category" id="task-category" placeholder="Catégorie de la tâche..." type="text" required>
+        <select name="category_id" id="task-category">
+          <option value="">Choisir une catégorie</option>
+        </select>
         <button>ajouter</button>
+      </form>
+    </div>
+
+    <div class="edit-modal-dialog">
+      <form id="edit-task-form">
+        <h2>Editer une tache</h2>
+        <label for="task-title" class="screen-reader-only"></label>
+        <input name= "id" id="edit-task-id" type="hidden">
+        <input name= "title" id="edit-task-title" placeholder="titre de la tâche..." type="text" required>
+        
+        <button>Sauvegarder</button>
       </form>
     </div>
 

@@ -40,7 +40,8 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|min:3|max:255'
+            'title' => 'required|string|min:3|max:255',
+            'category_id' => 'nullable|integer|exists:categories,id'
         ]);
 
 
@@ -51,14 +52,11 @@ class TaskController extends Controller
 
         $task = Task::create($validated);
 
-        // On sauvegarde, puis on gère la réponse avec le code HTTP qui convient
-        // 201 : Created
-        // 500 : Internal Server Error
-        if ($task->save()) {
-            return response()->json($task, 201);
-        } else {
-            return response(null, 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task created!',
+            'task' => $task->load('category')
+        ], 201);
     }
 
     /**
@@ -94,11 +92,6 @@ class TaskController extends Controller
     {
         // On recherche avec l'id
         $task= Task::findOrFail($id);
-        // Si on n'a rien, on ne peut pas faire de mise à jour
-        // 404 : not found
-        if (!$task) {
-            return response(null, 404);
-        }
 
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:255'
@@ -111,17 +104,11 @@ class TaskController extends Controller
 
         $task->title = $title; */
 
-        // On sauvegarde, puis on gère la réponse avec le code HTTP qui convient
-        // 500 : Internal Server Error
-        if ($task->save()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Task updated!',
-                'task' => $task
-            ]);
-        } else {
-            return response(null, 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task updated!',
+            'task' => $task
+        ]);
     }
 
     /**
