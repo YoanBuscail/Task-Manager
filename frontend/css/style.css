@@ -13,10 +13,17 @@
   --color-border-subtle: rgba(44, 44, 44, 0.1);
   --color-success-subtle: #29ffcc;
   --color-danger-subtle: #ffac92;
-  --color-attention-subtle: #ffcd29;
+  --color-attention-subtle: #3498db;
   --color-shadow-medium: 0 5px 0 rgba(44, 44, 44, 0.10);
   --color-btn-primary-bg: rgb(44, 44, 44);
   --color-btn-primary-text: #ffffff;
+
+  --color-primary: #3498db;
+  --color-secondary: #e74c3c;
+  --color-text: #333;
+  --color-background: #f2f2f2;
+  --color-button-bg: #27ae60;
+  --color-button-text: #fff;
 }
 
 /*
@@ -112,6 +119,11 @@ button:active {
   transform: translateY(0.125rem);
 }
 
+.close-modal-btn {
+  float: right;
+}
+
+
 /**
  * Messages
  */
@@ -147,6 +159,15 @@ button:active {
 }
 .message.success {
   background-color: var(--color-success-subtle);
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a shadow for visual effect */
+  z-index: 1000; /* Adjust the z-index as needed */
 }
 .message.danger {
   background-color: var(--color-danger-subtle);
@@ -345,4 +366,22 @@ em{
   margin-top: 1.2rem;
   margin-right: 1.2rem;
   font-weight: 900;
+}
+
+.tasklist p{
+  display: flex;
+  align-items: center;
+}
+
+.tasklist li span{
+  font-size: .5em;
+  background-color: #ffac92;
+  color: #ffffff;
+  padding: 5px;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+
+#task-tags{
+  margin-bottom: 1em;
 }

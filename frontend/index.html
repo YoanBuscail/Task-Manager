@@ -16,30 +16,35 @@
   <main>
 
     <div class="create-task-container">
-      <button id="create-task-btn">nouvelle tâche</button>
+      <button id="create-task-btn">Nouvelle tâche</button>
     </div>
 
     <div class="message success" hidden>
-      la nouvelle tâche a bien été ajoutée
+      La nouvelle tâche a bien été ajoutée
     </div>
     <div class="message danger" hidden>
-      oops, impossible de sauvegarder la tâche
+      Oops, impossible de sauvegarder la tâche
     </div>
     
     <ul class="tasklist"></ul>
 
     <div class="modal-dialog">
       <form id="task-create-form">
-        <h2>nouvelle tâche<span class="close-modal-btn">&times;</span></h2>
-        <label for="task-title" class="screen-reader-only">titre de la tâche</label>
+        <h2>Nouvelle tâche<span class="close-modal-btn">&times;</span></h2>
+        <label for="task-title" class="screen-reader-only">Titre de la tâche</label>
         <input name= "id" id="task-id" type="hidden">
-        <input name= "title" id="task-title" placeholder="titre de la tâche..." type="text" required>
+        <input name= "title" id="task-title" placeholder="Titre de la tâche..." type="text" required>
         
         <!-- Nouveau champ pour saisir la catégorie -->
         <select name="category_id" id="task-category">
           <option value="">Choisir une catégorie</option>
         </select>
-        <button>ajouter</button>
+
+        <div id="task-tags">
+          <h3>Tags</h3>
+        </div>
+
+        <button>Ajouter</button>
       </form>
     </div>
 

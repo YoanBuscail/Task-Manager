@@ -1,29 +1,78 @@
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+-- Adminer 4.7.6 MySQL dump
+
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+
+SET NAMES utf8mb4;
+
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1,	'Administratif',	'2023-07-28 13:44:15',	'2023-07-28 13:44:15'),
+(2,	'Cours',	'2023-07-28 13:44:15',	'2023-07-28 13:44:15'),
+(3,	'Banque',	'2023-07-28 13:44:15',	'2023-07-28 13:44:15'),
+(4,	'Pro',	'2023-07-28 13:44:15',	'2023-07-28 13:44:15'),
+(5,	'Shopping',	'2023-07-28 13:44:15',	'2023-07-28 13:44:15');
+
+DROP TABLE IF EXISTS `tags`;
+CREATE TABLE `tags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `tags` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1,	'Travail',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(2,	'Personnel',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(3,	'Urgent',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(4,	'Important',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(5,	'Famille',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(6,	'Loisirs',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(7,	'Santé',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(8,	'Courses',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(9,	'Projet',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08'),
+(10,	'Rendez-vous',	'2023-07-27 08:56:08',	'2023-07-27 08:56:08');
+
+DROP TABLE IF EXISTS `tag_task`;
+CREATE TABLE `tag_task` (
+  `tag_id` int(10) unsigned NOT NULL,
+  `task_id` bigint(20) unsigned NOT NULL,
+  KEY `tag_id` (`tag_id`),
+  KEY `task_id` (`task_id`),
+  CONSTRAINT `tag_task_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`),
+  CONSTRAINT `tag_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `tag_task` (`tag_id`, `task_id`) VALUES
+(2,	44),
+(7,	44),
+(8,	45);
+
 DROP TABLE IF EXISTS `tasks`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tasks` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `category_id` tinyint(4) DEFAULT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+INSERT INTO `tasks` (`id`, `category_id`, `title`, `status`, `created_at`, `updated_at`) VALUES
+(44,	1,	'Payer la facture du docteur',	0,	'2023-07-28 11:42:48',	'2023-07-28 11:42:48'),
+(45,	5,	'Acheter des pommes',	0,	'2023-07-28 11:44:31',	'2023-07-28 11:44:31'),
+(46,	NULL,	'Rendre le DVD à Pierre',	0,	'2023-07-28 11:45:13',	'2023-07-28 11:45:13');
 
-INSERT INTO `tasks` (`id`, `title`, `created_at`, `updated_at`) VALUES
-(1, 'Acheter une salade', '2022-08-21 19:13:59', '2022-08-21 19:13:59'),
-(2, 'Manger la salade', '2022-08-21 19:14:18', '2022-08-21 19:14:18'),
-(3, 'Laver son assiette', '2022-08-21 19:14:33', '2022-08-21 19:14:33');
+-- 2023-07-28 13:46:28

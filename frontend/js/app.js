@@ -12,6 +12,13 @@ const getCategories = async function(){
     return categories;
 };
 
+const getTags = async function(){
+    const request = await fetch('http://localhost:8000/api/tags');
+    const tags = await request.json();
+
+    return tags;
+}
+
 const deleteTask = async function(id){
     // faire la requête DELETE vers notre API
     await fetch('http://localhost:8000/api/tasks/' + id, {
@@ -68,7 +75,7 @@ const updateTaskElement = function(updatedTask) {
     }
 }
 
-const createTask = async function(task_title, task_category_id = null){
+const createTask = async function(task_title, task_category_id = null, task_tags = []){
     const response = await fetch('http://localhost:8000/api/tasks', {
         method: 'POST',
         headers: {
@@ -76,7 +83,8 @@ const createTask = async function(task_title, task_category_id = null){
         },
         body: JSON.stringify({
             title: task_title,
-            category_id: task_category_id
+            category_id: task_category_id,
+            tags: task_tags
         })
     });
 
@@ -97,6 +105,15 @@ const createTaskElement = (task) => {
     textElement.textContent = task.title;
     newTaskElement.append(textElement);
 
+    if(task.tags){
+        task.tags.forEach((tag) => {
+            const tagElement = document.createElement('span');
+            tagElement.textContent = tag.name;
+    
+            textElement.append(tagElement);
+        });
+    }
+    
     if(task.category){
         const categoryElement = document.createElement('em');
         categoryElement.textContent = task.category.name;
@@ -124,25 +141,17 @@ const createTaskElement = (task) => {
     editBtnElement.classList.add('edit');
     newTaskElement.append(editBtnElement);
 
+    // Affiche le success message
+    const successMessage = document.querySelector('.message.success');
+    successMessage.style.display = 'block';
+
+    // Cache le success message après un délai
+    setTimeout(() => {
+        successMessage.style.display = 'none';
+    }, 2000);
+
     taskList.append(newTaskElement);
 };
-
-/*const createTaskElement = (task) => {
-    const taskList = document.querySelector('.tasklist');
-
-    const taskExampleElement = document.querySelector('#task-example');
-    const newTaskElement = taskExampleElement.cloneNode(true);
-    newTaskElement.style.visibility = 'visible';
-    newTaskElement.removeAttribute('id');
-
-    taskExampleElement.style.visibility = 'hidden';
-
-    newTaskElement.setAttribute('data-id', task.id);
-    newTaskElement.querySelector('p').textContent = task.title;
-
-    taskList.append(newTaskElement);
-};*/
-
 
 const toggleModal = function () {
     const modalDialog = document.querySelector('.modal-dialog');
@@ -177,7 +186,7 @@ window.addEventListener('DOMContentLoaded', function(){
         const data = new FormData(event.currentTarget);
 
          // Je stock la nouvelle tâche dans une constante
-         createTask(data.get('title'), data.get('category_id')).then((task) => {
+         createTask(data.get('title'), data.get('category_id'), data.getAll('tags[]')).then((task) => {
             // Je viens créer un nouvel élément au niveau du DOM pour afficher la tâche
             createTaskElement(task);
 
@@ -206,6 +215,30 @@ window.addEventListener('DOMContentLoaded', function(){
         });
     }).catch(() => {
         console.log("Impossible de récupérer les catégories");
+    });
+
+    getTags().then((tags) => {
+        tags.forEach((tag) => {
+            const select = document.querySelector('#task-tags');
+            const divElement = document.createElement("div");
+
+            const inputElement = document.createElement("input");
+            inputElement.setAttribute("type", "checkbox");
+            inputElement.setAttribute("id", "tag-" + tag.id);
+            inputElement.setAttribute("name", "tags[]");
+            inputElement.setAttribute("value", tag.id);
+
+            const labelElement = document.createElement("label");
+            labelElement.setAttribute("for", "tag-" + tag.id);
+            labelElement.textContent = tag.name;
+
+            divElement.append(inputElement);
+            divElement.append(labelElement);
+            
+            document.querySelector('#task-tags').append(divElement);
+        });
+    }).catch(() => {
+        console.log("Impossible de récupérer les tags");
     });
 
 })

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\Tag;
 
 class TaskController extends Controller
 {
@@ -15,10 +16,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        // $tasks = Task::all();
-        // return response()->json($tasks);
-        // laravel renvoie directement la réponse en Json
-        return Task::all()->load(['category', 'tags']);
+        $tasks = Task::all()->load('category', 'tags');
+
+        //return $tasks->toJson();
+        //return $tasks
+        return response()->json($tasks);
     }
 
     /**
@@ -41,7 +43,8 @@ class TaskController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:255',
-            'category_id' => 'nullable|integer|exists:categories,id'
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'tags' => 'nullable|array'
         ]);
 
 
@@ -52,10 +55,19 @@ class TaskController extends Controller
 
         $task = Task::create($validated);
 
+        if($request->get('tags')){
+            foreach($request->get('tags') as $tag_id){
+                $tag = Tag::find($tag_id);
+                if($tag){
+                    $task->tags()->attach($tag);
+                }
+            }
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Task created!',
-            'task' => $task->load('category')
+            'task' => $task->load('category', 'tags')
         ], 201);
     }
 
@@ -117,25 +129,15 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-         // On recherche avec l'id
-         $task= Task::findOrFail($id);
-         // Si on n'a rien, on ne peut pas faire de mise à jour
-         // 404 : not found
-         if (!$task) {
-             return response(null, 404);
-         }
+    public function destroy($id){
+        $task = Task::findOrFail($id);
 
-         // On supprime puis on gère la réponse avec le code HTTP qui convient
-         // 500 : Internal Server Error
-         if ($task->delete()) {
-             return response()->json([
-                'status' => 'success',
-                'message' => 'Task deleted!'
-            ]);
-         } else {
-             return response(null, 500);
-         }
+        $task->tags()->detach();
+        $task->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task deleted!'
+        ]);
     }
 }
