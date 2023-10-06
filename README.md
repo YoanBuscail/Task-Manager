@@ -13,8 +13,8 @@ Task-Manager est une application de gestion de tâches créée avec Laravel. Ell
 
 ## Captures d'écran
 
-![Capture d'écran 1](https://votre-url-de-capture1.com)
-![Capture d'écran 2](https://votre-url-de-capture2.com)
+![Capture d'écran 2023-10-06 144303](https://github.com/YoanBuscail/Task-Manager/assets/131248915/0dbea363-8f25-4739-a310-6cf999c24cbc)
+![Capture d'écran 2023-10-06 144336](https://github.com/YoanBuscail/Task-Manager/assets/131248915/6410b7fd-9c82-43db-96d4-3dc19025c28e)
 
 ## Installation
 
@@ -60,9 +60,6 @@ php artisan serve
 
 Vous pouvez personnaliser davantage l'application Task-Manager en modifiant les vues, les contrôleurs et les modèles fournis avec Laravel pour répondre à vos besoins spécifiques.
 
-## Licence
-
-Ce projet est sous licence MIT. Consultez le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ---
 
