@@ -1,6 +1,6 @@
 # Task-Manager
 
-Task-Manager est une application de gestion de tâches créée avec Laravel. Elle vous permet de créer, modifier et supprimer des tâches. De plus, vous pouvez attribuer des catégories et des tags à vos tâches pour mieux les organiser.
+Task-Manager est une application de gestion de tâches créée avec Laravel dans le cadre de ma formation de développeur web, puis améliorée en solo. Elle vous permet de créer, modifier et supprimer des tâches. De plus, vous pouvez attribuer des catégories et des tags à vos tâches pour mieux les organiser.
 
 ## Fonctionnalités
 
